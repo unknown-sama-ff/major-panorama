@@ -357,22 +357,20 @@
     <div id="searchResults" class="search-results" style="display:none;"></div>
     <div class="nav-tabs" id="navTabs">
       <a class="nav-tab active" href="#overview">总览</a>
+      <a class="nav-tab" href="#admission">志愿填报</a>
       <a class="nav-tab" href="#details">分学科详图</a>
       <a class="nav-tab" href="#new-majors">新增专业</a>
-      <a class="nav-tab" href="#decision">决策辅助</a>
-      <a class="nav-tab" href="#admission">志愿填报</a>
+      <a class="nav-tab" href="#scoreline">分数线数据</a>
       <a class="nav-tab" href="#volunteer-tables">我的志愿表</a>
       <a class="nav-tab" href="#favorites">我的收藏</a>
-      <a class="nav-tab" href="#scoreline">分数线数据</a>
-      <a class="nav-tab" href="#admission-plan">招生计划</a>
+      <a class="nav-tab" href="#decision">决策辅助</a>
       <a class="nav-tab" href="#tools">辅助工具</a>
     </div>
     <button class="mobile-nav-toggle" id="mobileNavToggle" aria-label="导航菜单">☰</button>
     <div class="mobile-nav-menu" id="mobileNavMenu">
-      <a href="#overview">总览</a><a href="#details">分学科详图</a><a href="#new-majors">新增专业</a>
-      <a href="#decision">决策辅助</a><a href="#admission">志愿填报</a><a href="#volunteer-tables">我的志愿表</a>
-      <a href="#favorites">我的收藏</a><a href="#scoreline">分数线数据</a>
-      <a href="#admission-plan">招生计划</a><a href="#tools">辅助工具</a>
+      <a href="#overview">总览</a><a href="#admission">志愿填报</a><a href="#details">分学科详图</a>
+      <a href="#new-majors">新增专业</a><a href="#scoreline">分数线数据</a><a href="#volunteer-tables">我的志愿表</a>
+      <a href="#favorites">我的收藏</a><a href="#decision">决策辅助</a><a href="#tools">辅助工具</a>
     </div>
 
     <section id="overview">
@@ -747,17 +745,6 @@
         </div>
         <div id="subjectMatchResult" style="display:none;margin-top:1rem;">
           <div id="subjectMatchResultContent"></div>
-        </div>
-      </div>
-    </section>
-    <section id="admission-plan" class="detail-section">
-      <h2>招生计划</h2>
-      <p class="text-muted text-small mb-1-5">查看各高校在各省的招生计划与专业设置（数据仅供参考）</p>
-      <div id="admissionPlanContent">
-        <div class="empty-state">
-          <div class="empty-state-icon">🏫</div>
-          <div class="empty-state-title">招生计划数据</div>
-          <div class="empty-state-desc">请在志愿填报匹配结果中点击高校卡片查看详细招生计划</div>
         </div>
       </div>
     </section>
@@ -1407,7 +1394,7 @@
       if (postgradData) {
         postgradHtml = '<div class="modal-section"><h4>📚 深造参考数据</h4><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.75rem;margin-top:0.5rem;"><div class="score-card"><div class="score-card-label">保研率</div><div class="score-card-value">' + postgradData.baoYanRate + '</div></div><div class="score-card"><div class="score-card-label">学科评估</div><div class="score-card-value">' + postgradData.disciplineEval + '</div></div><div class="score-card"><div class="score-card-label">博士点</div><div class="score-card-value">' + (postgradData.hasDoctorStation ? '有' : '无') + '</div></div></div><p class="text-sm text-muted" style="margin-top:0.5rem;">' + postgradData.note + '</p></div>';
       }
-      var modalHtml = '<div class="modal-overlay fullscreen-mobile" id="uniModal"><div class="modal-content" style="max-width:750px;"><button class="modal-close" onclick="closeUniModal()">&times;</button><h2 class="modal-title">' + uni.name + ' ' + typeBadge + ' ' + levelBadge + '</h2><div class="modal-meta"><span>地区：' + (provinceNames[uni.province] || uni.province) + '</span></div>' + rankingHtml + '<div style="margin-top:1rem;"><button class="fav-btn ' + favBtnClass + '" id="uniFavBtn" onclick="App.favorites.toggle(\'' + uniName.replace(/'/g, "\\'") + '\')">' + favText + '</button></div>' + postgradHtml + (uni.description ? '<div class="modal-section"><h4>学校简介</h4><div class="modal-desc">' + App.utils.escapeHtml(uni.description) + '</div></div>' : '') + (uni.website ? '<div class="modal-section"><h4>学校百科</h4><a href="' + uni.website + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-size:0.9rem;word-break:break-all;">' + uni.website + '</a><span class="text-xs text-muted" style="margin-left:0.5rem;">（点击访问百度百科）</span></div>' : '') + (uni.majors && typeof majorData !== 'undefined' ? (function() { var discNames = uni.majors.map(function(code) { return App.data.disciplineNameMap[code] || ''; }).filter(Boolean); if (discNames.length === 0) return ''; return '<div class="modal-section"><h4>开设学科门类</h4><div class="flex flex-wrap gap-0-5">' + discNames.map(function(name) { return '<span style="background:var(--bg2);padding:3px 10px;border-radius:4px;font-size:0.85rem;">' + name + '</span>'; }).join('') + '</div></div>'; })() : '') + (uni.scoreTrend && uni.scoreTrend.length > 0 ? (function() { var trendPhysics = uni.scoreTrend.filter(function(t) { return t.type === 'physics' || t.type === 'like'; }); var trendHistory = uni.scoreTrend.filter(function(t) { return t.type === 'history' || t.type === 'wenke'; }); var maxScore = 0; uni.scoreTrend.forEach(function(t) { if (t.score > maxScore) maxScore = t.score; }); maxScore = Math.ceil(maxScore / 50) * 50 + 50; var minScore = Math.max(300, Math.floor((maxScore - 200) / 50) * 50); var chartHtml = '<div class="modal-section"><h4>近3年最低录取线趋势</h4><div class="text-xs text-muted" style="margin-bottom:0.5rem;">数据来源：各省教育考试院（2025年最低录取线）</div><div class="trend-chart">'; uni.scoreTrend.forEach(function(t) { var barHeight = ((t.score - minScore) / (maxScore - minScore)) * 140; var barClass = t.type === 'physics' || t.type === 'like' ? 'physics' : 'history'; var typeLabel = t.type === 'physics' ? '物理' : t.type === 'history' ? '历史' : t.type === 'like' ? '理科' : '文科'; chartHtml += '<div class="trend-bar-group"><div class="trend-bar-value">' + t.score + '</div><div class="trend-bar ' + barClass + '" style="height:' + barHeight + 'px;"></div><div class="trend-bar-label">' + t.year + '</div><div class="trend-bar-label">' + typeLabel + '</div></div>'; }); chartHtml += '</div><div class="trend-legend">'; if (trendPhysics.length > 0) chartHtml += '<div class="trend-legend-item"><span class="trend-legend-color" style="background:linear-gradient(to top,#5A7A8C,#7A9AAC);"></span>物理类/理科</div>'; if (trendHistory.length > 0) chartHtml += '<div class="trend-legend-item"><span class="trend-legend-color" style="background:linear-gradient(to top,#8B7D6B,#AB9D8B);"></span>历史类/文科</div>'; chartHtml += '</div></div>'; return chartHtml; })() : (function() { var uniPolicy = provincePolicy[uni.province]; var uniMode = uniPolicy ? uniPolicy.mode : '3+1+2'; var studentProv = document.getElementById('studentProvince').value || uni.province; var ps = uni.provinceScores ? uni.provinceScores.find(function(p) { return p.province === studentProv; }) : null; var scoreCards = ''; if (uniMode === '3+3') { var s = ps && ps.physics ? ps.physics : '无'; scoreCards += '<div class="score-card"><div class="score-card-label">综合分</div><div class="score-card-value">' + (s === '无' ? '无' : s + '分') + '</div></div>'; } else if (uniMode === '3+1+2') { var sp = ps && ps.physics ? ps.physics : '无'; var sh = ps && ps.history ? ps.history : '无'; scoreCards += '<div class="score-card"><div class="score-card-label">物理类</div><div class="score-card-value">' + (sp === '无' ? '无' : sp + '分') + '</div></div>'; scoreCards += '<div class="score-card"><div class="score-card-label">历史类</div><div class="score-card-value">' + (sh === '无' ? '无' : sh + '分') + '</div></div>'; } else { var sl = ps && ps.physics ? ps.physics : '无'; var sw = ps && ps.history ? ps.history : '无'; scoreCards += '<div class="score-card"><div class="score-card-label">理科</div><div class="score-card-value">' + (sl === '无' ? '无' : sl + '分') + '</div></div>'; scoreCards += '<div class="score-card"><div class="score-card-label">文科</div><div class="score-card-value">' + (sw === '无' ? '无' : sw + '分') + '</div></div>'; } var provName = provinceNames[studentProv] || provinceNames[uni.province] || ''; var modeLabel = uniMode === '3+3' ? '综合分（不分文理）' : uniMode === '3+1+2' ? '物理类/历史类' : '理科/文科'; return '<div class="modal-section"><h4>最低录取分数线</h4><div class="text-xs text-muted" style="margin-bottom:0.5rem;">' + provName + '省' + modeLabel + '（2025年最低录取线）</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;">' + scoreCards + '</div></div>'; })()) + (uni.admissionPlan && uni.admissionPlan.length > 0 ? (function() { var planHtml = '<div class="modal-section"><h4>各专业最低录取分数线（2025年）</h4><div class="text-xs text-muted" style="margin-bottom:0.5rem;">以下为各专业2025年最低录取分数线，不同省份考生请以本省数据为准</div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.85rem;"><thead><tr style="background:var(--bg2);"><th style="padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);font-weight:600;">专业名称</th><th style="padding:8px 12px;text-align:center;border-bottom:2px solid var(--border);font-weight:600;width:100px;">分数线</th><th style="padding:8px 12px;text-align:center;border-bottom:2px solid var(--border);font-weight:600;width:120px;">选科要求</th></tr></thead><tbody>'; uni.admissionPlan.forEach(function(plan) { var score = '无'; var studentProv = document.getElementById('studentProvince').value || uni.province; 
+      var modalHtml = '<div class="modal-overlay fullscreen-mobile" id="uniModal"><div class="modal-content" style="max-width:750px;"><button class="modal-close" onclick="closeUniModal()">&times;</button><h2 class="modal-title">' + uni.name + ' ' + typeBadge + ' ' + levelBadge + '</h2><div class="modal-meta"><span>地区：' + (provinceNames[uni.province] || uni.province) + '</span></div>' + rankingHtml + '<div style="margin-top:1rem;"><button class="fav-btn ' + favBtnClass + '" id="uniFavBtn" onclick="App.favorites.toggle(\'' + uniName.replace(/'/g, "\\'") + '\')">' + favText + '</button></div>' + postgradHtml + (uni.description ? '<div class="modal-section"><h4>学校简介</h4><div class="modal-desc">' + App.utils.escapeHtml(uni.description) + '</div></div>' : '') + (uni.website ? '<div class="modal-section"><h4>学校百科</h4><a href="' + uni.website + '" target="_blank" rel="noopener noreferrer" style="color:var(--accent);font-size:0.9rem;word-break:break-all;">' + uni.website + '</a><span class="text-xs text-muted" style="margin-left:0.5rem;">（点击访问百度百科）</span></div>' : '') + (uni.majors && typeof majorData !== 'undefined' ? (function() { var discNames = uni.majors.map(function(code) { return App.data.disciplineNameMap[code] || ''; }).filter(Boolean); if (discNames.length === 0) return ''; return '<div class="modal-section"><h4>开设学科门类</h4><div class="flex flex-wrap gap-0-5">' + discNames.map(function(name) { return '<span style="background:var(--bg2);padding:3px 10px;border-radius:4px;font-size:0.85rem;">' + name + '</span>'; }).join('') + '</div></div>'; })() : '') + (uni.scoreTrend && uni.scoreTrend.length > 0 ? (function() { var trendPhysics = uni.scoreTrend.filter(function(t) { return t.type === 'physics' || t.type === 'like'; }); var trendHistory = uni.scoreTrend.filter(function(t) { return t.type === 'history' || t.type === 'wenke'; }); var maxScore = 0; uni.scoreTrend.forEach(function(t) { if (t.score > maxScore) maxScore = t.score; }); maxScore = Math.ceil(maxScore / 50) * 50 + 50; var minScore = Math.max(300, Math.floor((maxScore - 200) / 50) * 50); var chartHtml = '<div class="modal-section"><h4>近3年最低录取线趋势</h4><div class="text-xs text-muted" style="margin-bottom:0.5rem;">数据来源：各省教育考试院 · <a href="https://www.eol.cn/e_ky/zt/gkfslb.shtml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">查看历年分数线汇总表</a> · <a href="https://gaokao.chsi.com.cn/sch/schoolInfoSearch--searchType=1,searchScheme=0,fund=1.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">阳光高考院校查分</a></div><div class="trend-chart">'; uni.scoreTrend.forEach(function(t) { var barHeight = ((t.score - minScore) / (maxScore - minScore)) * 140; var barClass = t.type === 'physics' || t.type === 'like' ? 'physics' : 'history'; var typeLabel = t.type === 'physics' ? '物理' : t.type === 'history' ? '历史' : t.type === 'like' ? '理科' : '文科'; chartHtml += '<div class="trend-bar-group"><div class="trend-bar-value">' + t.score + '</div><div class="trend-bar ' + barClass + '" style="height:' + barHeight + 'px;"></div><div class="trend-bar-label">' + t.year + '</div><div class="trend-bar-label">' + typeLabel + '</div></div>'; }); chartHtml += '</div><div class="trend-legend">'; if (trendPhysics.length > 0) chartHtml += '<div class="trend-legend-item"><span class="trend-legend-color" style="background:linear-gradient(to top,#5A7A8C,#7A9AAC);"></span>物理类/理科</div>'; if (trendHistory.length > 0) chartHtml += '<div class="trend-legend-item"><span class="trend-legend-color" style="background:linear-gradient(to top,#8B7D6B,#AB9D8B);"></span>历史类/文科</div>'; chartHtml += '</div></div>'; return chartHtml; })() : (function() { var uniPolicy = provincePolicy[uni.province]; var uniMode = uniPolicy ? uniPolicy.mode : '3+1+2'; var studentProv = document.getElementById('studentProvince').value || uni.province; var ps = uni.provinceScores ? uni.provinceScores.find(function(p) { return p.province === studentProv; }) : null; var scoreCards = ''; if (uniMode === '3+3') { var s = ps && ps.physics ? ps.physics : '无'; scoreCards += '<div class="score-card"><div class="score-card-label">综合分</div><div class="score-card-value">' + (s === '无' ? '无' : s + '分') + '</div></div>'; } else if (uniMode === '3+1+2') { var sp = ps && ps.physics ? ps.physics : '无'; var sh = ps && ps.history ? ps.history : '无'; scoreCards += '<div class="score-card"><div class="score-card-label">物理类</div><div class="score-card-value">' + (sp === '无' ? '无' : sp + '分') + '</div></div>'; scoreCards += '<div class="score-card"><div class="score-card-label">历史类</div><div class="score-card-value">' + (sh === '无' ? '无' : sh + '分') + '</div></div>'; } else { var sl = ps && ps.physics ? ps.physics : '无'; var sw = ps && ps.history ? ps.history : '无'; scoreCards += '<div class="score-card"><div class="score-card-label">理科</div><div class="score-card-value">' + (sl === '无' ? '无' : sl + '分') + '</div></div>'; scoreCards += '<div class="score-card"><div class="score-card-label">文科</div><div class="score-card-value">' + (sw === '无' ? '无' : sw + '分') + '</div></div>'; } var provName = provinceNames[studentProv] || provinceNames[uni.province] || ''; var modeLabel = uniMode === '3+3' ? '综合分（不分文理）' : uniMode === '3+1+2' ? '物理类/历史类' : '理科/文科'; return '<div class="modal-section"><h4>最低录取分数线</h4><div class="text-xs text-muted" style="margin-bottom:0.5rem;">' + provName + '省' + modeLabel + '（2025年最低录取线）</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.5rem;">' + scoreCards + '</div><div style="margin-top:0.5rem;font-size:0.75rem;color:var(--muted);"><a href="https://www.eol.cn/e_ky/zt/gkfslb.shtml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">查看历年分数线汇总表</a> · <a href="https://gaokao.chsi.com.cn/sch/schoolInfoSearch--searchType=1,searchScheme=0,fund=1.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">阳光高考院校查分</a></div></div>'; })()) + (uni.admissionPlan && uni.admissionPlan.length > 0 ? (function() { var planHtml = '<div class="modal-section"><h4>各专业最低录取分数线（2025年）</h4><div class="text-xs text-muted" style="margin-bottom:0.5rem;">以下为各专业2025年最低录取分数线，不同省份考生请以本省数据为准</div><div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:0.85rem;"><thead><tr style="background:var(--bg2);"><th style="padding:8px 12px;text-align:left;border-bottom:2px solid var(--border);font-weight:600;">专业名称</th><th style="padding:8px 12px;text-align:center;border-bottom:2px solid var(--border);font-weight:600;width:100px;">分数线</th><th style="padding:8px 12px;text-align:center;border-bottom:2px solid var(--border);font-weight:600;width:120px;">选科要求</th></tr></thead><tbody>'; uni.admissionPlan.forEach(function(plan) { var score = '无'; var studentProv = document.getElementById('studentProvince').value || uni.province; 
               // Only show score if the student's province has data
               var hasProvData = uni.provinceScores && uni.provinceScores.find(function(p) { return p.province === studentProv; });
               if (hasProvData) {
@@ -1421,7 +1408,7 @@
                     score = plan.subjectType === '物理类' || plan.subjectType === '理科' ? (ps.physics || '无') : plan.subjectType === '历史类' || plan.subjectType === '文科' ? (ps.history || '无') : (ps.physics || ps.like || '无');
                   }
                 }
-              } planHtml += '<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">' + plan.major + '</td><td style="padding:8px 12px;text-align:center;font-weight:600;">' + score + '</td><td style="padding:8px 12px;text-align:center;"><span style="background:var(--bg2);padding:2px 8px;border-radius:4px;font-size:0.75rem;">' + (plan.subjectType || '不限') + '</span></td></tr>'; }); planHtml += '</tbody></table></div></div>'; return planHtml; })() : '') + '</div></div>';
+              } planHtml += '<tr style="border-bottom:1px solid var(--border);"><td style="padding:8px 12px;">' + plan.major + '</td><td style="padding:8px 12px;text-align:center;font-weight:600;">' + score + '</td><td style="padding:8px 12px;text-align:center;"><span style="background:var(--bg2);padding:2px 8px;border-radius:4px;font-size:0.75rem;">' + (plan.subjectType || '不限') + '</span></td></tr>'; }); planHtml += '</tbody></table><div style="margin-top:0.5rem;font-size:0.75rem;color:var(--muted);"><a href="https://www.eol.cn/e_ky/zt/gkfslb.shtml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">查看历年分数线汇总表</a> · <a href="https://gaokao.chsi.com.cn/sch/schoolInfoSearch--searchType=1,searchScheme=0,fund=1.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">阳光高考院校查分</a></div></div>'; return planHtml; })() : '') + '</div></div>';
       document.body.insertAdjacentHTML('beforeend', modalHtml);
       document.getElementById('uniModal').addEventListener('click', function(e) { if (e.target === this) closeUniModal(); });
     }
@@ -1616,82 +1603,85 @@
 
         setTimeout(function() {
           var matches = [];
-          App.data.universityData.forEach(function(uni) {
-            if (targetProv && uni.province !== targetProv) return;
-            if (schoolType && uni.type !== schoolType) return;
-            if (disciplineCode && (!uni.majors || uni.majors.indexOf(disciplineCode) === -1)) return;
-            if (keyword) {
-              var hasKeyword = false;
-              if (uni.majorScores) {
-                uni.majorScores.forEach(function(ms) { if (ms.name.toLowerCase().includes(keyword)) hasKeyword = true; });
+          try {
+            App.data.universityData.forEach(function(uni) {
+              if (targetProv && uni.province !== targetProv) return;
+              if (schoolType && uni.type !== schoolType) return;
+              if (disciplineCode && (!uni.majors || uni.majors.indexOf(disciplineCode) === -1)) return;
+              if (keyword) {
+                var hasKeyword = false;
+                if (uni.majorScores && uni.majorScores.length > 0) {
+                  uni.majorScores.forEach(function(ms) {
+                    var searchField = (ms.name || ms.major || '').toLowerCase();
+                    if (searchField.includes(keyword)) hasKeyword = true;
+                  });
+                }
+                if (!hasKeyword && !uni.name.toLowerCase().includes(keyword)) return;
               }
-              if (!hasKeyword && !uni.name.toLowerCase().includes(keyword)) return;
-            }
-            var scoreDiff = null;
-            var matchedType = null;
-            var line = null;
-            var policy = provincePolicy[province];
-            var mode = policy ? policy.mode : '3+1+2';
-            // Map traditional subjects to new gaokao equivalents for requirement checking
-            var mappedSubjects = subjects.map(function(s) {
-              if (s === '理科') return '物理';
-              if (s === '文科') return '历史';
-              return s;
+              var scoreDiff = null;
+              var matchedType = null;
+              var line = null;
+              var policy = provincePolicy[province];
+              var mode = policy ? policy.mode : '3+1+2';
+              // Map traditional subjects to new gaokao equivalents for requirement checking
+              var mappedSubjects = subjects.map(function(s) {
+                if (s === '理科') return '物理';
+                if (s === '文科') return '历史';
+                return s;
+              });
+              if (uni.scoreLines) {
+                if (mode === '3+3') {
+                  line = uni.scoreLines.physics || uni.scoreLines.wuli || uni.scoreLines.like;
+                  if (line) { scoreDiff = score - line; matchedType = '综合'; }
+                } else if (mode === '3+1+2') {
+                  var hasPhysics = mappedSubjects.indexOf('物理') !== -1;
+                  if (hasPhysics) { line = uni.scoreLines.physics || uni.scoreLines.like; if (line) { scoreDiff = score - line; matchedType = '物理类'; } }
+                  else { line = uni.scoreLines.history || uni.scoreLines.wenke; if (line) { scoreDiff = score - line; matchedType = '历史类'; } }
+                } else {
+                  var hasLike = subjects.indexOf('理科') !== -1;
+                  if (hasLike) { line = uni.scoreLines.like || uni.scoreLines.physics; if (line) { scoreDiff = score - line; matchedType = '理科'; } }
+                  else { line = uni.scoreLines.wenke || uni.scoreLines.history; if (line) { scoreDiff = score - line; matchedType = '文科'; } }
+                }
+              }
+              if (scoreDiff === null) return;
+              if (line !== null && (line < minScore || line > maxScore)) return;
+              // Subject requirement filter: check if university's disciplines require subjects the student hasn't selected
+              if (uni.majors && subjects.length > 0) {
+                var hasUnmetReq = uni.majors.some(function(code) {
+                  var req = disciplineRequirements[code];
+                  if (!req || req.length === 0) return false;
+                  // If student has selected ANY of the required subjects, they can apply
+                  var hasMatch = req.some(function(r) { return mappedSubjects.indexOf(r) !== -1; });
+                  return !hasMatch;
+                });
+                var allUnmet = uni.majors.every(function(code) {
+                  var req = disciplineRequirements[code];
+                  if (!req || req.length === 0) return false;
+                  var hasMatch = req.some(function(r) { return mappedSubjects.indexOf(r) !== -1; });
+                  return !hasMatch;
+                });
+                if (allUnmet) return;
+              }
+              var level = 0;
+              if (scoreDiff >= 30) level = 4;
+              else if (scoreDiff >= 10) level = 3;
+              else if (scoreDiff >= -10) level = 2;
+              else if (scoreDiff >= -30) level = 1;
+              else level = 0;
+              matches.push({ university: uni, scoreDiff: scoreDiff, matchedType: matchedType, level: level, line: line });
             });
-            if (uni.scoreLines) {
-              if (mode === '3+3') {
-                line = uni.scoreLines.physics || uni.scoreLines.wuli;
-                if (line) { scoreDiff = score - line; matchedType = '综合'; }
-              } else if (mode === '3+1+2') {
-                var hasPhysics = mappedSubjects.indexOf('物理') !== -1;
-                if (hasPhysics) { line = uni.scoreLines.physics; if (line) { scoreDiff = score - line; matchedType = '物理类'; } }
-                else { line = uni.scoreLines.history; if (line) { scoreDiff = score - line; matchedType = '历史类'; } }
-              } else {
-                var hasLike = subjects.indexOf('理科') !== -1;
-                if (hasLike) { line = uni.scoreLines.like; if (line) { scoreDiff = score - line; matchedType = '理科'; } }
-                else { line = uni.scoreLines.wenke; if (line) { scoreDiff = score - line; matchedType = '文科'; } }
-              }
-            }
-            if (scoreDiff === null) return;
-            if (line !== null && (line < minScore || line > maxScore)) return;
-            // Subject requirement filter: check if university's disciplines require subjects the student hasn't selected
-            if (uni.majors && subjects.length > 0) {
-              var hasUnmetReq = uni.majors.some(function(code) {
-                var req = disciplineRequirements[code];
-                if (!req || req.length === 0) return false;
-                // If student has selected ANY of the required subjects, they can apply
-                var hasMatch = req.some(function(r) { return mappedSubjects.indexOf(r) !== -1; });
-                return !hasMatch;
-              });
-              // Only filter if ALL disciplines of the university have unmet requirements
-              // This is a conservative filter - if uni has at least one discipline that matches, keep it
-              var allUnmet = uni.majors.every(function(code) {
-                var req = disciplineRequirements[code];
-                if (!req || req.length === 0) return false;
-                var hasMatch = req.some(function(r) { return mappedSubjects.indexOf(r) !== -1; });
-                return !hasMatch;
-              });
-              if (allUnmet) return;
-            }
-            var level = 0;
-            if (scoreDiff >= 30) level = 4;
-            else if (scoreDiff >= 10) level = 3;
-            else if (scoreDiff >= -10) level = 2;
-            else if (scoreDiff >= -30) level = 1;
-            else level = 0;
-            matches.push({ university: uni, scoreDiff: scoreDiff, matchedType: matchedType, level: level, line: line });
-          });
-          // Sort: prioritize "稳妥" and "较稳" schools, exclude "风险" schools from top results
-          // For high scores: show high-line schools first within each level
-          // For all scores: prioritize levels 2-3 (较稳/稳妥) over extremes
-          matches.sort(function(a, b) {
-            // Priority: 稳妥(3) > 较稳(2) > 保底(4) > 冲刺(1) > 风险(0)
-            var priority = [0, 1, 4, 2, 3]; // risk=0, 冲刺=1, 较稳=4, 稳妥=2, 保底=3
-            var pa = priority[a.level] || 0;
-            var pb = priority[b.level] || 0;
-            if (pa !== pb) return pb - pa; // higher priority first
-            return b.line - a.line; // higher line first within same priority
-          });
+            // Sort: prioritize "稳妥" and "较稳" schools
+            matches.sort(function(a, b) {
+              var priority = [0, 1, 4, 2, 3];
+              var pa = priority[a.level] || 0;
+              var pb = priority[b.level] || 0;
+              if (pa !== pb) return pb - pa;
+              return b.line - a.line;
+            });
+          } catch (e) {
+            console.error('performMatch error:', e);
+            App.ui.toast('匹配过程中出现问题，已显示部分结果');
+          }
           renderMatchResults(matches);
         }, 300);
       }
@@ -2074,7 +2064,7 @@
             tbody.appendChild(row);
           });
         });
-        note.textContent = '数据来源：' + (provinceNames[province] || province) + '省教育考试院（2025年最低录取线）';
+        note.innerHTML = '<strong>数据来源：</strong>' + (provinceNames[province] || province) + '省教育考试院官网（2025年最低录取线）<br><a href="https://www.eol.cn/e_ky/zt/gkfslb.shtml" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">查看历年分数线汇总表</a> · <a href="https://gaokao.chsi.com.cn/sch/schoolInfoSearch--searchType=1,searchScheme=0,fund=1.html" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">阳光高考院校查分</a> · <a href="https://www.gaokao.com" target="_blank" rel="noopener noreferrer" style="color:var(--accent);">高考网</a>';
       }
       provinceSelect.addEventListener('change', renderScoreline);
       subjectSelect.addEventListener('change', renderScoreline);
